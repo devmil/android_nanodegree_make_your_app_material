@@ -7,13 +7,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +33,6 @@ import com.example.xyzreader.data.UpdaterService;
 public class ArticleListActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
-    private Toolbar mToolbar;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
     private View mToolbarContainerView;
@@ -49,9 +46,6 @@ public class ArticleListActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_list);
-
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-
 
         mToolbarContainerView = findViewById(R.id.toolbar_container);
 
@@ -104,7 +98,6 @@ public class ArticleListActivity extends AppCompatActivity implements
                                     .withEndAction(new Runnable() {
                                         @Override
                                         public void run() {
-                                            updateToolsElevation();
                                             mToolbarIsAnimatingIn = false;
                                         }
                                     })
@@ -112,7 +105,6 @@ public class ArticleListActivity extends AppCompatActivity implements
                         }
                     }
                 }
-                updateToolsElevation();
             }
         });
 
@@ -123,17 +115,6 @@ public class ArticleListActivity extends AppCompatActivity implements
 
         if (savedInstanceState == null) {
             refresh();
-        }
-    }
-
-    private void updateToolsElevation() {
-        if(mToolbarContainerView != null
-                && mRecyclerView != null) {
-            float elevation = getResources().getDimension(R.dimen.toolregion_elevation);
-            boolean isOnTop = -mTotalScrollY >= mToolbarContainerView.getTranslationY();
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                mToolbarContainerView.setElevation(isOnTop ? 0 : elevation);
-            }
         }
     }
 
