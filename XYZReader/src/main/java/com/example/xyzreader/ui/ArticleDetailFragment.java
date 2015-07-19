@@ -52,6 +52,7 @@ public class ArticleDetailFragment extends Fragment implements
     private int mTopInset;
     private View mPhotoContainerView;
     private ImageView mPhotoView;
+    private View mMetaBar;
     private int mScrollY;
     private boolean mIsCard = false;
     private int mStatusBarFullOpacityBottom;
@@ -112,6 +113,8 @@ public class ArticleDetailFragment extends Fragment implements
                 mTopInset = insets.top;
             }
         });
+
+        mMetaBar = mRootView.findViewById(R.id.meta_bar);
 
         mScrollView = (ObservableScrollView) mRootView.findViewById(R.id.scrollview);
         mScrollView.setCallbacks(new ObservableScrollView.Callbacks() {
@@ -257,13 +260,15 @@ public class ArticleDetailFragment extends Fragment implements
     }
 
     public int getUpButtonFloor() {
-        if (mPhotoContainerView == null || mPhotoView.getHeight() == 0) {
+        if (mMetaBar == null) {
             return Integer.MAX_VALUE;
         }
 
-        // account for parallax
-        return mIsCard
-                ? (int) mPhotoContainerView.getTranslationY() + mPhotoView.getHeight() - mScrollY
-                : mPhotoView.getHeight() - mScrollY;
+        int[] metaBarLocation = new int[2];
+        mMetaBar.getLocationInWindow(metaBarLocation);
+        int[] rootLocation = new int[2];
+        mRootView.getLocationInWindow(rootLocation);
+
+        return metaBarLocation[1] - rootLocation[1]; //metabar.y - root.y
     }
 }
